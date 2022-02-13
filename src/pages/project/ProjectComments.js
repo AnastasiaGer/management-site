@@ -4,6 +4,7 @@ import { useAuthContext } from "../../hooks/useAuthContext"
 import { useFirestore } from "../../hooks/useFirestore"
 
 import Avatar from "../../components/Avatar/Avatar"
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
 export default function ProjectComments({ project }) {
   const { user } = useAuthContext()
@@ -20,7 +21,7 @@ export default function ProjectComments({ project }) {
       createdAt: timestamp.fromDate(new Date()),
       id: Math.random()
     }
-    
+
     await updateDocument(project.id, {
       comments: [...project.comments, commentToAdd],
     })
@@ -41,7 +42,7 @@ export default function ProjectComments({ project }) {
               <p>{comment.displayName}</p>
             </div>
             <div className="comment-date">
-              <p>date here</p>
+              <p>{formatDistanceToNow(comment.createdAt.toDate(), { addSuffix: true })}</p>
             </div>
             <div className="comment-content">
               <p>{comment.content}</p>
@@ -53,7 +54,7 @@ export default function ProjectComments({ project }) {
       <form className="add-comment" onSubmit={handleSubmit}>
         <label>
           <span>Add new comment:</span>
-          <textarea 
+          <textarea
             onChange={(e) => setNewComment(e.target.value)}
             value={newComment}
           ></textarea>
